@@ -17,7 +17,7 @@ public class Main {
 
     // Shrink scope of what is displayed to speed it up
     public static int LEFT_BOUNDS = (int)((50) * detail);
-    public static int RIGHT_BOUNDS = (int)((width/5) / detail);
+    public static int RIGHT_BOUNDS = (int)((width/2) / detail);
     public static int UPPER_BOUNDS = (int)((100) * detail);
     public static int LOWER_BOUNDS = (int)((height/1.9) / detail);
 

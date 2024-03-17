@@ -28,19 +28,23 @@ public class Canvas extends JPanel {
         Point2D.Double p1 = new Point2D.Double(100,100);
         Point2D.Double p2 = new Point2D.Double(400,150);
         Point2D.Double p3 = new Point2D.Double(200,200);
-        //roots.add(new Arm(p1,p2,p3));
-        //p1 = new Point2D.Double(100,100);
-        //p2 = new Point2D.Double(475,250);
-        //p3 = new Point2D.Double(200,200);
-        //roots.add(new Arm(p1,p2,p3));
+        roots.add(new Curve(p1,p2,p3,1));
+        p1 = new Point2D.Double(100,100);
+        p2 = new Point2D.Double(475,250);
+        p3 = new Point2D.Double(200,200);
+        roots.add(new Curve(p1,p2,p3,.8));
         p1 = new Point2D.Double(350,150);
         p2 = new Point2D.Double(100,100);
         p3 = new Point2D.Double(125,250);
-        roots.add(new Curve(p1,p2,p3));
+        roots.add(new Curve(p1,p2,p3,.6));
         p1 = new Point2D.Double(350,150);
         p2 = new Point2D.Double(150,200);
         p3 = new Point2D.Double(125,250);
-        roots.add(new Curve(p1,p2,p3));
+        roots.add(new Curve(p1,p2,p3,.4));
+
+        for (Curve curve : roots) {
+            curve.calculate();
+        }
 
         for (double i = 0; i <= 10; i+=1) {
             //System.out.println("Color: "+(255 * (i/10)));
@@ -65,7 +69,7 @@ public class Canvas extends JPanel {
         //    for (int y = Main.UPPER_BOUNDS; y < Main.LOWER_BOUNDS; y += Main.detail) {
         fillPostprocessArray();
 
-        //postprocess();
+        postprocess();
 
         draw(g2);
         //g2.setColor(Color.RED);
@@ -105,17 +109,22 @@ public class Canvas extends JPanel {
             for (int y = Main.UPPER_BOUNDS; y < Main.LOWER_BOUNDS; y += 1) {
                 //System.out.print("Checking "+x+", "+y);
                 //System.out.println("Checking "+x+", "+y);
-                boolean contains = false;
+                double contains = 0;
                 for (Curve arm : roots) {
-                    if (arm.contains(x*Main.detail,y*Main.detail)) {
-                        contains = !contains;
+                    double shade = arm.contains(x*Main.detail,y*Main.detail);
+                    if (shade != 0) {
+                        if (contains == 0) {
+                            contains = shade;
+                        } else {
+                            contains = 0;
+                        }
                     }
                 }
-                if (contains) {
+                if (contains != 0) {
                     //System.out.println(". Is in curve!");
                     //System.out.println(x+", "+y+". Is in curve!");
                     //g2.fillRect(x, y, Main.detail, Main.detail);
-                    postpros[x][y] = 1;
+                    postpros[x][y] = contains;
                 } else {
                     //System.out.println(". No.");
                     postpros[x][y] = 0;
