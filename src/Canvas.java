@@ -19,6 +19,8 @@ public class Canvas extends JPanel {
 
     ArrayList<Arm> roots = new ArrayList<>();
 
+    private boolean isFirst = true;
+
     public Canvas(int seed) {
         this(seed, 1);
     }
@@ -88,21 +90,37 @@ public class Canvas extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         // g2.setStroke(new BasicStroke(4));
         g2.setColor(Color.BLACK);
-        // for (int x = Main.LEFT_BOUNDS; x < Main.RIGHT_BOUNDS; x += Main.detail) {
-        // for (int y = Main.UPPER_BOUNDS; y < Main.LOWER_BOUNDS; y += Main.detail) {
+
+        if (isFirst) {
+            isFirst = false;
+            return;
+        }
+
+        long timeElapsed = System.nanoTime();
+
         fillPostprocessArray();
 
         postprocess();
 
         draw(g2);
+        long timeTook = (System.nanoTime() - timeElapsed) / 1000000;
+        double timeSec = (double) timeTook / 1000;
+        System.out.println("Drawing Time Took: " + timeSec);
+
         // g2.setColor(Color.RED);
         // g2.fillRect(200, 200, 10, 10);
 
     }
 
     public void fillPostprocessArray() {
-        for (int x = Main.LEFT_BOUNDS; x < Main.RIGHT_BOUNDS; x += 1) {
-            // for (int x = 124; x <= 126; x += 1) {
+        int left_bounds = Main.LEFT_BOUNDS;
+        int right_bounds = Main.RIGHT_BOUNDS;
+        if (Main.DEBUG_SPECIFIC_X) {
+            left_bounds = Main.x_to_debug;
+            right_bounds = Main.x_to_debug + 1;
+        }
+        for (int x = left_bounds; x < right_bounds; x += 1) {
+            // for (int x = 200; x < 201; x += 1) {
             for (int y = Main.UPPER_BOUNDS; y < Main.LOWER_BOUNDS; y += 1) {
                 // System.out.print("Checking "+x+", "+y);
                 // System.out.println("Checking "+x+", "+y);

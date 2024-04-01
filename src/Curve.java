@@ -27,7 +27,6 @@ public class Curve {
                 { (int) p3.getX(), (int) p3.getY(), 0 }
         };
         // System.out.println(endpointss.toString());
-        System.out.println(Arrays.deepToString(endpointss));
         // bruh. java moment
         endpoints = endpointss;
     }
@@ -50,7 +49,7 @@ public class Curve {
     public void fillAdjacentCurveDirectionInformation(double p1_connected_x, double p3_connected_x, int num) {
         double p1x = p1.getX();
         // get if curve is to the left ( positive ) or right (negative)
-        double p1Dir = p1x - getXForT(.001);
+        double p1Dir = p1x - getXForT(.0001);
         double connectedP1Dir = p1x - p1_connected_x;
         if (p1Dir < 0) {
             p1Dir = -1;
@@ -64,19 +63,26 @@ public class Curve {
         }
         // if same polarity then -1, if same then 1
         if (p1Dir == connectedP1Dir) {
-            endpoints[0][2] = 1;
-        } else if (p1Dir == connectedP1Dir * -1) {
             endpoints[0][2] = -1;
+        } else if (p1Dir == connectedP1Dir * -1) {
+            endpoints[0][2] = 1;
         } else {
             System.out.println(
                     "SANITY CHECK FAILED: CURVE " + num + "'s P1 DIRECTIONALITY OUTPUT MAKES NO SENSE " + p1Dir + ", "
                             + connectedP1Dir
-                            + " FROM INPUTS " + p1x + ", " + getXForT(.001) + ", " + p1x + ", " + p1_connected_x);
+                            + " FROM INPUTS " + p1x + ", " + getXForT(.0001) + ", " + p1x + ", " + p1_connected_x);
+        }
+
+        if (Main.v > 2) {
+            System.out.println(
+                    "CURVE " + num + "'s P1 DIRECTIONALITY OUTPUT " + p1Dir + ", "
+                            + connectedP1Dir
+                            + " FROM INPUTS " + p1x + ", " + getXForT(.0001) + ", " + p1x + ", " + p1_connected_x);
         }
 
         double p3x = p3.getX();
         // get if curve is to the left ( positive ) or right (negative)
-        double p3Dir = p3x - getXForT(.999);
+        double p3Dir = p3x - getXForT(.9999);
         double connectedP3Dir = p3x - p3_connected_x;
         if (p3Dir < 0) {
             p3Dir = -1;
@@ -90,15 +96,23 @@ public class Curve {
         }
         // if same polarity then -1, if same then 1
         if (p3Dir == connectedP3Dir) {
-            endpoints[1][2] = 1;
-        } else if (p3Dir == connectedP3Dir * -1) {
             endpoints[1][2] = -1;
+        } else if (p3Dir == connectedP3Dir * -1) {
+            endpoints[1][2] = 1;
         } else {
             System.out.println(
                     "SANITY CHECK FAILED: CURVE " + num + "'s P3 DIRECTIONALITY OUTPUT MAKES NO SENSE " + p3Dir + ", "
                             + connectedP3Dir
-                            + " FROM INPUTS " + p3x + ", " + getXForT(.999) + ", " + p3x + ", " + p3_connected_x);
+                            + " FROM INPUTS " + p3x + ", " + getXForT(.9999) + ", " + p3x + ", " + p3_connected_x);
         }
+        if (Main.v > 2) {
+            System.out.println(
+                    "CURVE " + num + "'s P3 DIRECTIONALITY OUTPUT " + p3Dir + ", "
+                            + connectedP3Dir
+                            + " FROM INPUTS " + p3x + ", " + getXForT(.9999) + ", " + p3x + ", " + p3_connected_x);
+        }
+
+        System.out.println("Final: " + Arrays.deepToString(endpoints));
     }
 
     public void checkThatCurveAdjacencyWasSet() {
@@ -116,8 +130,14 @@ public class Curve {
             System.out.println("Calculating for " + p1.toString() + ", " + p2.toString() + ", " + p3.toString());
         }
 
-        for (int x = Main.LEFT_BOUNDS; x < Main.RIGHT_BOUNDS + 1; x += 1) {
-            // for (int x = 125; x < 126; x += 1) {
+        int left_bounds = Main.LEFT_BOUNDS;
+        int right_bounds = Main.RIGHT_BOUNDS + 1;
+        if (Main.DEBUG_SPECIFIC_X) {
+            left_bounds = Main.x_to_debug;
+            right_bounds = Main.x_to_debug + 1;
+        }
+        for (int x = left_bounds; x < right_bounds; x += 1) {
+            // for (int x = 200; x < 201; x += 1) {
             if (Main.v > 2) {
                 System.out.println("Calculating for x=" + x);
             }
@@ -162,10 +182,10 @@ public class Curve {
             if (Main.v >= 3) {
                 System.out.println("Got time values of " + t1 + ", " + t2);
             }
-            if ((t1 == t2) && (t1 >= .999999 && t1 <= .000001)) {
+            if ((t1 == t2) && (t1 >= .999999 || t1 <= .000001)) {
                 // What the fuck? Oh, it's an apex on a corner
                 System.out.println("Curve apex happening at " + x + ", " + this.toString());
-                // t2 = -9999;
+                t2 = -9999;
                 // Other issue is just what I do when two meet in the first place. Maybe we can
                 // just track that by returning it when applicable.
             }
@@ -194,6 +214,9 @@ public class Curve {
         }
     }
 
+    // First represents if there is an odd number of intersections for this X above
+    // this Y
+    // Second represents how many CROSSING endpoints there are above this point
     public int[] isAboveOddNumTimes(int x, int y) {
         int ys_above = 0;
 
@@ -210,14 +233,15 @@ public class Curve {
 
         // if exactly at endpoint and loops over itself, needs to do a special check to
         // prevent some odd results
-        if (allYValsForX[x][2] == 1 && (y > y1)) {
-            // System.out.println("1 "+x+", "+y+", "+y2);
-            ys_above -= 1;
-        }
-        if (allYValsForX[x][2] == 2 && (y > y2)) {
-            // System.out.println("2 "+x+", "+y+", "+y1);
-            ys_above -= 1;
-        }
+        // may be depreciated
+        // if (allYValsForX[x][2] == 1 && (y > y1)) {
+        // System.out.println("1 "+x+", "+y+", "+y2);
+        // ys_above -= 1;
+        // }
+        // if (allYValsForX[x][2] == 2 && (y > y2)) {
+        // System.out.println("2 "+x+", "+y+", "+y1);
+        // ys_above -= 1;
+        // }
 
         if (ys_above % 2 == 1) {
             int[] rtrn = { 1, numberValidPointsForThisXY(x, y) };
@@ -230,10 +254,14 @@ public class Curve {
 
     public int numberValidPointsForThisXY(int x, int y) {
         int how_many = 0;
+        // System.out.println((x == endpoints[0][0]) + ", " + (y >= endpoints[0][1]) +
+        // ", " + (endpoints[0][2] == 1));
         if (x == endpoints[0][0] && y >= endpoints[0][1] && endpoints[0][2] == 1) {
             how_many += 1;
         }
-        if (x == endpoints[1][0] && y >= endpoints[1][1] && endpoints[0][2] == 1) {
+        // System.out.println((x == endpoints[1][0]) + ", " + (y >= endpoints[1][1]) +
+        // ", " + (endpoints[1][2] == 1));
+        if (x == endpoints[1][0] && y >= endpoints[1][1] && endpoints[1][2] == 1) {
             how_many += 1;
         }
         return how_many;

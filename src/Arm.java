@@ -63,26 +63,28 @@ public class Arm {
             // left
             // System.out.println("Rotating " + mid_x + ", " + dx + ". " + mid_y + ", " +
             // dy);
-            mid_x -= dx;
-            mid_y += dy;
+            mid_x -= dy;
+            mid_y += dx;
         } else {
             // right
-            mid_x += dx;
-            mid_y -= dy;
+            mid_x += dy;
+            mid_y -= dx;
         }
         Point2D.Double bottom = new Point2D.Double(mid_x, mid_y);
         curves[2] = new Curve(curves[0].p1, bottom, curves[1].p1);
 
-        // angle check for curve 0. p1 connects to c[2].p1, p3 to c[1].p3
-        curves[0].fillAdjacentCurveDirectionInformation(curves[2].getXForT(.001), curves[1].getXForT(.999), 0);
-        // angle check for curve 1. p1 connects to c[2].p3, p3 to c[0].p3
-        curves[1].fillAdjacentCurveDirectionInformation(curves[2].getXForT(.999), curves[0].getXForT(.999), 1);
-        // angle check for curve 2. p1 connects to c[0].p1, p3 to c[1].p1
-        curves[2].fillAdjacentCurveDirectionInformation(curves[0].getXForT(.001), curves[1].getXForT(.001), 2);
-
-        for (Curve c : curves) {
-            System.out.println(c.toString());
+        if (Main.v > 0) {
+            for (Curve c : curves) {
+                System.out.println(c.toString());
+            }
         }
+
+        // angle check for curve 0. p1 connects to c[2].p1, p3 to c[1].p3
+        curves[0].fillAdjacentCurveDirectionInformation(curves[2].getXForT(.0001), curves[1].getXForT(.9999), 0);
+        // angle check for curve 1. p1 connects to c[2].p3, p3 to c[0].p3
+        curves[1].fillAdjacentCurveDirectionInformation(curves[2].getXForT(.9999), curves[0].getXForT(.9999), 1);
+        // angle check for curve 2. p1 connects to c[0].p1, p3 to c[1].p1
+        curves[2].fillAdjacentCurveDirectionInformation(curves[0].getXForT(.0001), curves[1].getXForT(.0001), 2);
 
         if (false && step < Main.MAX_STEPS) {
             children = new Arm[density];
@@ -107,6 +109,10 @@ public class Arm {
         } else {
             children = new Arm[0];
         }
+
+        for (Curve c : curves) {
+            c.checkThatCurveAdjacencyWasSet();
+        }
     }
 
     public double contains(int x, int y) {
@@ -120,9 +126,12 @@ public class Arm {
                 contained = !contained;
             }
         }
+        // System.out.println("For x=" + x + ", y=" + y + " got values "
+        // + contained + ", " + number_of_endpoints_above_this_point);
+
         // if (number_of_endpoints_above_this_point > 0) {
-        // System.out.println("Got " + number_of_endpoints_above_this_point + "
-        // endpoints");
+        // System.out.println("For x=" + x + ", y=" + y + " got values "
+        // + contained + ", " + number_of_endpoints_above_this_point);
         // }
         if (number_of_endpoints_above_this_point % 2 != 0) {
             System.out.println("ERROR: ODD NUMBER OF ENDPOINTS AT " + x + ", " + y);

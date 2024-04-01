@@ -26,7 +26,10 @@ public class Main {
 
     public static int MAX_STEPS = 5;
 
-    public static int v = 0; // 0 is none, 1 is some, 2 is all
+    public static int v = 1; // 0 is none, 1 is some, 2 is all
+
+    public static boolean DEBUG_SPECIFIC_X = false;
+    public static int x_to_debug = 300;
 
     /**
      * main method for the program which creates and configures the frame for the
@@ -49,13 +52,8 @@ public class Main {
         System.out.println("Constructor Time Took: " + timeSec);
 
         // make the frame visible which will result in the paintComponent method being
-        // invoked on the
-        // component.
-        timeElapsed = System.nanoTime();
+        // invoked on the component.
         frame.setVisible(true);
-        timeTook = (System.nanoTime() - timeElapsed) / 1000000;
-        timeSec = (double) timeTook / 1000;
-        System.out.println("setVisible Time Took: " + timeSec);
 
         /*
          * long timeElapsed = 0;
