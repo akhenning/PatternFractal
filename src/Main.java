@@ -24,12 +24,12 @@ public class Main {
     public static int UPPER_BOUNDS = (int) ((50) * detail);
     public static int LOWER_BOUNDS = (int) ((height / 1.9) / detail);
 
-    public static int MAX_STEPS = 5;
+    public static int MAX_STEPS = 1;
 
     public static int v = 1; // 0 is none, 1 is some, 2 is all
 
     public static boolean DEBUG_SPECIFIC_X = false;
-    public static int x_to_debug = 300;
+    public static int x_to_debug = 350;
 
     /**
      * main method for the program which creates and configures the frame for the

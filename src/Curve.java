@@ -10,7 +10,7 @@ public class Curve {
     Point2D p2 = new Point2D.Double(450, 150);
     Point2D p3 = new Point2D.Double(200, 200);
 
-    int[][] endpoints;
+    double[][] endpoints;
 
     public Curve(Point2D p1, Point2D p2, Point2D p3) {
         this.p1 = p1;
@@ -22,9 +22,9 @@ public class Curve {
         // value for flags, and another to track number of endpoints
 
         // Last integer represents whether it is a corner or a flat connection
-        int[][] endpointss = {
-                { (int) p1.getX(), (int) p1.getY(), 0 },
-                { (int) p3.getX(), (int) p3.getY(), 0 }
+        double[][] endpointss = {
+                { p1.getX(), p1.getY(), 0 },
+                { p3.getX(), p3.getY(), 0 }
         };
         // System.out.println(endpointss.toString());
         // bruh. java moment
@@ -32,6 +32,9 @@ public class Curve {
     }
 
     public double[] getXYForT(double t) {
+        if (t > 1 || t < 0) {
+            System.out.println("ERROR: INVALID T " + t);
+        }
         double x = (Math.pow(1 - t, 2) * p1.getX()) + ((2 * t * (1 - t)) * p2.getX()) + (Math.pow(t, 2) * p3.getX());
         double y = (Math.pow(1 - t, 2) * p1.getY()) + ((2 * t * (1 - t)) * p2.getY()) + (Math.pow(t, 2) * p3.getY());
 
@@ -40,6 +43,9 @@ public class Curve {
     }
 
     public double getXForT(double t) {
+        if (t > 1 || t < 0) {
+            System.out.println("ERROR: INVALID T " + t);
+        }
         double x = (Math.pow(1 - t, 2) * p1.getX()) + ((2 * t * (1 - t)) * p2.getX()) + (Math.pow(t, 2) * p3.getX());
         return x;
     }
@@ -244,24 +250,28 @@ public class Curve {
         // }
 
         if (ys_above % 2 == 1) {
-            int[] rtrn = { 1, numberValidPointsForThisXY(x, y) };
+            int[] rtrn = { 1, numberValidCornersForThisXY(x, y) };
             return rtrn;
         } else {
-            int[] rtrn = { 0, numberValidPointsForThisXY(x, y) };
+            int[] rtrn = { 0, numberValidCornersForThisXY(x, y) };
             return rtrn;
         }
     }
 
-    public int numberValidPointsForThisXY(int x, int y) {
+    public int numberValidCornersForThisXY(int x, int y) {
         int how_many = 0;
         // System.out.println((x == endpoints[0][0]) + ", " + (y >= endpoints[0][1]) +
         // ", " + (endpoints[0][2] == 1));
-        if (x == endpoints[0][0] && y >= endpoints[0][1] && endpoints[0][2] == 1) {
+
+        // todo this 1 will need to be changed to scale with zoom
+        // if ((x >= endpoints[0][0] && x < endpoints[0][3]) && y >= endpoints[0][1] &&
+        // endpoints[0][2] == 1) {
+        if ((Math.abs(x - endpoints[0][0]) < .001) && y >= endpoints[0][1] && endpoints[0][2] == 1) {
             how_many += 1;
         }
         // System.out.println((x == endpoints[1][0]) + ", " + (y >= endpoints[1][1]) +
         // ", " + (endpoints[1][2] == 1));
-        if (x == endpoints[1][0] && y >= endpoints[1][1] && endpoints[1][2] == 1) {
+        if ((Math.abs(x - endpoints[1][0]) < .001) && y >= endpoints[1][1] && endpoints[1][2] == 1) {
             how_many += 1;
         }
         return how_many;

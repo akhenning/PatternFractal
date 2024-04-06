@@ -47,25 +47,72 @@ public class Canvas extends JPanel {
          * roots.add(new Curve(p1, p2, p3, .4));
          */
 
-        Point2D.Double p1 = new Point2D.Double(100, 100);
-        Point2D.Double p2 = new Point2D.Double(250, 160);
-        Point2D.Double p3 = new Point2D.Double(100, 200);
-        Curve c1 = new Curve(p1, p2, p3);
-        p1 = new Point2D.Double(100, 125);
-        p2 = new Point2D.Double(200, 150);
-        p3 = new Point2D.Double(100, 200);
-        Curve c2 = new Curve(p1, p2, p3);
-        roots.add(new Arm(c1, c2, true, 3, .75, 100, 1, .3, .1, 1, 0, seed));
+        /*
+         * Point2D.Double p1 = new Point2D.Double(100, 100);
+         * Point2D.Double p2 = new Point2D.Double(250, 160);
+         * Point2D.Double p3 = new Point2D.Double(100, 200);
+         * Curve c1 = new Curve(p1, p2, p3);
+         * p1 = new Point2D.Double(100, 125);
+         * p2 = new Point2D.Double(200, 150);
+         * p3 = new Point2D.Double(100, 200);
+         * Curve c2 = new Curve(p1, p2, p3);
+         */
+        // todo wtf
+        // Point2D.Double p1 = new Point2D.Double(100, 100);
+        // Point2D.Double p2 = new Point2D.Double(250, 160);
+        // Point2D.Double p3 = new Point2D.Double(300, 200);
+        // Curve c1 = new Curve(p1, p2, p3);
+        // p1 = new Point2D.Double(100, 125);
+        // p2 = new Point2D.Double(200, 150);
+        // p3 = new Point2D.Double(300, 200);
+        // Curve c2 = new Curve(p1, p2, p3);
+        // This just curves up normally
+        //
+        boolean test = false;
+        if (test) {
+            Point2D.Double p1 = new Point2D.Double(100, 100);
+            Point2D.Double p2 = new Point2D.Double(250, 160);
+            Point2D.Double p3 = new Point2D.Double(300, 200);
+            Curve c1 = new Curve(p1, p2, p3);
+            p1 = new Point2D.Double(100, 125);
+            p2 = new Point2D.Double(200, 150);
+            p3 = new Point2D.Double(300, 200);
+            Curve c2 = new Curve(p1, p2, p3);
+            roots.add(new Arm(c1, c2, true));
+        } else {
 
-        p1 = new Point2D.Double(200, 100);
-        p2 = new Point2D.Double(350, 150);
-        p3 = new Point2D.Double(300, 200);
-        c1 = new Curve(p1, p2, p3);
-        p1 = new Point2D.Double(225, 125);
-        p2 = new Point2D.Double(300, 150);
-        p3 = new Point2D.Double(300, 200);
-        c2 = new Curve(p1, p2, p3);
-        roots.add(new Arm(c1, c2, true, 3, .75, 100, 1, .3, .1, 1, 0, seed));
+            Point2D.Double p1 = new Point2D.Double(100, 100);
+            Point2D.Double p2 = new Point2D.Double(400, 100);
+            Point2D.Double p3 = new Point2D.Double(400, 400);
+            Curve c1 = new Curve(p1, p2, p3);
+            p1 = new Point2D.Double(100, 200);
+            p2 = new Point2D.Double(400, 200);
+            p3 = new Point2D.Double(400, 400);
+            Curve c2 = new Curve(p1, p2, p3);
+
+            int[] dens = { 4, 2 };
+            double[] full = { .6, 1 };
+            double[] len = { 150, 100 };
+            double[] rot = { .5, 0 };
+            // double[] rot = { .1, .2 };
+            double[] hook = { .1, .1 };
+            double[] l = { .2, .3 };
+            double[] r = { .1, .3 };
+            double[] gro = { 0, .05 };
+            roots.add(new Arm(c1, c2, true, dens, full, len, rot, hook, l, r, gro, 1, 0, seed));
+        }
+
+        /*
+         * p1 = new Point2D.Double(200, 100);
+         * p2 = new Point2D.Double(350, 150);
+         * p3 = new Point2D.Double(300, 200);
+         * c1 = new Curve(p1, p2, p3);
+         * p1 = new Point2D.Double(225, 125);
+         * p2 = new Point2D.Double(300, 150);
+         * p3 = new Point2D.Double(300, 200);
+         * c2 = new Curve(p1, p2, p3);
+         * roots.add(new Arm(c1, c2, true, 3, .75, 100, 1, .3, .1, 1, 0, seed));
+         */
 
         for (Arm arm : roots) {
             arm.calculate();
