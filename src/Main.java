@@ -29,7 +29,7 @@ public class Main {
     public static int v = 1; // 0 is none, 1 is some, 2 is all
 
     public static boolean DEBUG_SPECIFIC_X = false;
-    public static int x_to_debug = 350;
+    public static int x_to_debug = 150;
 
     /**
      * main method for the program which creates and configures the frame for the
@@ -55,33 +55,6 @@ public class Main {
         // invoked on the component.
         frame.setVisible(true);
 
-        /*
-         * long timeElapsed = 0;
-         * long timeTook = 0;
-         * 
-         * timeElapsed = System.nanoTime(); // starts counting here...
-         * 
-         * //canvas.advance();
-         * 
-         * timeTook = (System.nanoTime() - timeElapsed) / 1000000;
-         * if (timeTook > 3) {
-         * System.out.println("Lag Spike: " + timeTook +" milliseconds.");
-         * if (timeTook > 21) {
-         * System.out.println("WARNING: LAG SPIKE WAS PRETTY HIGH. 33 MS/F IS LIMIT");
-         * }
-         * }
-         * System.out.println("Time Took: " + timeTook);
-         * 
-         * // 10fps. though loop is not implimented
-         * try {
-         * if (timeTook<100) {
-         * Thread.sleep((long) (100-timeTook));
-         * }
-         * } catch (InterruptedException e) {
-         * System.out.println("Error while sleeping\n");
-         * e.printStackTrace();
-         * }
-         */
     }
 
 }

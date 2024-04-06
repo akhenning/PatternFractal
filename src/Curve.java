@@ -29,6 +29,11 @@ public class Curve {
         // System.out.println(endpointss.toString());
         // bruh. java moment
         endpoints = endpointss;
+
+        if (((p1.getX()) - (2 * p2.getX()) + (p3.getX())) == 0) {
+            System.out.println("Notice: Quadratic formula equals zero for one of the curves. Accounting for.");
+            this.p2 = new Point2D.Double(p2.getX() + .001, p2.getY());
+        }
     }
 
     public double[] getXYForT(double t) {
@@ -151,13 +156,23 @@ public class Curve {
             double y1 = -9999;
             double y2 = -9999;
 
-            if ((((p1.getX()) - (2 * p2.getX()) + (p3.getX())) == 0)
-                    || (4 * Math.pow(p2.getX(), 2)) - (4 * p1.getX() * p3.getX()) + (4 * x * p1.getX())
-                            - (8 * x * p2.getX()) + (4 * x * p3.getX()) < 0) {
+            if (((p1.getX()) - (2 * p2.getX()) + (p3.getX())) == 0) {
+                if (Main.v > 0) {
+                    System.out.println(
+                            "Warning: Curve formula failed at x=" + x + " because denom = 0 for curve mentioned above");
+                }
+                allYValsForX[x][0] = -9999;
+                allYValsForX[x][1] = -9999;
+
+                continue;
+
+            } else if ((4 * Math.pow(p2.getX(), 2)) - (4 * p1.getX() * p3.getX()) + (4 * x * p1.getX())
+                    - (8 * x * p2.getX()) + (4 * x * p3.getX()) < 0) {
                 // Check for if the following equation will throw an error
                 // from sqrt(-1) or x/0
                 allYValsForX[x][0] = -9999;
                 allYValsForX[x][1] = -9999;
+
                 continue;
             }
 

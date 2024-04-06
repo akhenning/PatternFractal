@@ -68,7 +68,7 @@ public class Canvas extends JPanel {
         // Curve c2 = new Curve(p1, p2, p3);
         // This just curves up normally
         //
-        boolean test = false;
+        boolean test = true;
         if (test) {
             Point2D.Double p1 = new Point2D.Double(100, 100);
             Point2D.Double p2 = new Point2D.Double(250, 160);
